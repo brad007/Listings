@@ -1,4 +1,4 @@
-package com.oneafricamedia.classifieds;
+package com.oneafricamedia.classifieds.adapters;
 
 import android.app.Activity;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.oneafricamedia.classifieds.R;
+import com.oneafricamedia.classifieds.models.Car;
+
 import java.util.ArrayList;
 
 /**
@@ -14,11 +17,11 @@ import java.util.ArrayList;
  */
 public class SwipeStackAdapter extends BaseAdapter {
 
-    private ArrayList<Cars> mData;
+    private ArrayList<Car> mData;
     private Activity activity;
 
 
-    public SwipeStackAdapter(ArrayList<Cars> data, Activity activity) {
+    public SwipeStackAdapter(ArrayList<Car> data, Activity activity) {
         this.mData = data;
 
         this.activity = activity;
@@ -46,11 +49,18 @@ public class SwipeStackAdapter extends BaseAdapter {
         ImageView carImage = (ImageView) view.findViewById(R.id.card_image);
         TextView carTitle = (TextView) view.findViewById(R.id.car_title);
         TextView carPrice = (TextView) view.findViewById(R.id.car_price);
+        TextView priceNegotiableText = (TextView)view.findViewById(R.id.negotiable_text);
 
-        Cars car = mData.get(i);
-        carImage.setImageResource(car.getCarImage());
-        carTitle.setText(car.getCarName());
-        carPrice.setText(car.getCarCost());
+        Car car = mData.get(i);
+        carImage.setImageResource(car.getImage());
+        carTitle.setText(car.getName());
+        carPrice.setText(car.getCost());
+
+        if(car.isNegotiable()){
+            priceNegotiableText.setText("(Negotiable)");
+        }else{
+            priceNegotiableText.setText("(Non Negotiable)");
+        }
         return view;
     }
 }

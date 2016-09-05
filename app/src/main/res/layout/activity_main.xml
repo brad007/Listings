@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:gravity="center"
-    tools:context="com.oneafricamedia.classifieds.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <link.fls.swipestack.SwipeStack
         android:id="@+id/swipeStack"

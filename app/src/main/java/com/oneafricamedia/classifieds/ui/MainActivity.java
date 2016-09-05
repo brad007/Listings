@@ -1,10 +1,14 @@
-package com.oneafricamedia.classifieds;
+package com.oneafricamedia.classifieds.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.oneafricamedia.classifieds.R;
+import com.oneafricamedia.classifieds.adapters.SwipeStackAdapter;
+import com.oneafricamedia.classifieds.models.Car;
 
 import java.util.ArrayList;
 
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements
     };
     private FrameLayout frameLayout;
     private SwipeStack swipeStack;
-    private ArrayList<Cars> list;
+    private ArrayList<Car> list;
 
 
     @Override
@@ -75,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements
             int random = (int) (Math.random() * 10);
             int random1 = (int) (Math.random() * 10);
             int random2 = (int) (Math.random() * 10);
-
-            list.add(new Cars(car_images[random], car_names[random1], car_prices[random2]));
+            int random3 = (int) (Math.random() * 1);
+            list.add(new Car(car_images[random], car_names[random1], car_prices[random2], random3 == 0));
         }
     }
 
