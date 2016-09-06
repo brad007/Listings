@@ -9,10 +9,10 @@ import android.widget.FrameLayout;
 import com.oneafricamedia.classifieds.R;
 import com.oneafricamedia.classifieds.adapters.SwipeStackAdapter;
 import com.oneafricamedia.classifieds.models.Car;
+import com.oneafricamedia.classifieds.widget.swipestack.SwipeStack;
 
 import java.util.ArrayList;
 
-import link.fls.swipestack.SwipeStack;
 
 
 public class MainActivity extends AppCompatActivity implements

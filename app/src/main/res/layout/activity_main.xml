@@ -8,7 +8,7 @@
     android:gravity="center"
     tools:context=".ui.MainActivity">
 
-    <link.fls.swipestack.SwipeStack
+    <com.oneafricamedia.classifieds.widget.swipestack.SwipeStack
         android:id="@+id/swipeStack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
