@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.oneafricamedia.classifieds.R;
 import com.oneafricamedia.classifieds.models.Car;
 
@@ -29,6 +30,9 @@ public class SwipeStackAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(mData == null){
+            return 0;
+        }
         return mData.size();
     }
 
@@ -49,16 +53,22 @@ public class SwipeStackAdapter extends BaseAdapter {
         ImageView carImage = (ImageView) view.findViewById(R.id.card_image);
         TextView carTitle = (TextView) view.findViewById(R.id.car_title);
         TextView carPrice = (TextView) view.findViewById(R.id.car_price);
-        TextView priceNegotiableText = (TextView)view.findViewById(R.id.negotiable_text);
+        TextView carYear = (TextView) view.findViewById(R.id.car_year);
+        TextView priceNegotiableText = (TextView) view.findViewById(R.id.negotiable_text);
 
         Car car = mData.get(i);
-        carImage.setImageResource(car.getImage());
-        carTitle.setText(car.getName());
-        carPrice.setText(car.getCost());
 
-        if(car.isNegotiable()){
+        Glide.with(activity)
+                .load(car.getImageUrl())
+                .into(carImage);
+
+        carTitle.setText(car.getTitle() + " " + car.getModelId());
+        carYear.setText("Year: " + car.getYear());
+        carPrice.setText(car.getCurrency() + car.getPrice());
+
+        if (car.isNegotiable()) {
             priceNegotiableText.setText("(Negotiable)");
-        }else{
+        } else {
             priceNegotiableText.setText("(Non Negotiable)");
         }
         return view;

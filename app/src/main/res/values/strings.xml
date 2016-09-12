@@ -11,4 +11,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="checki_url"> http://chekicustomerapp.getsandbox.com/api/v1/brad/test</string>
+    <string name="action_refresh">Refresh</string>
 </resources>
