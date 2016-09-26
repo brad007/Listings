@@ -30,7 +30,7 @@ public class SwipeStackAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(mData == null){
+        if (mData == null) {
             return 0;
         }
         return mData.size();
@@ -62,7 +62,7 @@ public class SwipeStackAdapter extends BaseAdapter {
                 .load(car.getImageUrl())
                 .into(carImage);
 
-        carTitle.setText(car.getTitle() + " " + car.getModelId());
+        carTitle.setText(car.getTitle());
         carYear.setText("Year: " + car.getYear());
         carPrice.setText(car.getCurrency() + car.getPrice());
 

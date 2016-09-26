@@ -3,24 +3,57 @@ package com.oneafricamedia.classifieds.models;
 /**
  * Created by brad on 2016/09/02.
  */
-public class Car{
+public class Car {
     private String imageUrl;
     private String title;
-    private int modelId;
+    private String make;
+    private String model;
+    private String condition;
     private int price;
     private String currency;
     private boolean negotiable;
     private int year;
     private int weight;
 
-    public Car(String imageUrl, String title, int modelId, int price, String currency, boolean negotiable, int year) {
+    public Car(String imageUrl, String title, String make, String model, String condition, int price, String currency, boolean negotiable, int year, int weight) {
         this.imageUrl = imageUrl;
         this.title = title;
-        this.modelId = modelId;
+        this.make = make;
+        this.model = model;
+        this.condition = condition;
         this.price = price;
         this.currency = currency;
         this.negotiable = negotiable;
         this.year = year;
+        this.weight = weight;
+    }
+
+    public Car() {
+        weight = 0;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 
     public int getWeight() {
@@ -45,14 +78,6 @@ public class Car{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(int modelId) {
-        this.modelId = modelId;
     }
 
     public int getPrice() {
@@ -89,6 +114,21 @@ public class Car{
     }
 
 
+    @Override
+    public String toString() {
+        return "Car{" +
+                "imageUrl='" + imageUrl + '\'' +
+                ", title='" + title + '\'' +
+                ", make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", condition='" + condition + '\'' +
+                ", price=" + price +
+                ", currency='" + currency + '\'' +
+                ", negotiable=" + negotiable +
+                ", year=" + year +
+                ", weight=" + weight +
+                '}';
+    }
 }
 
 

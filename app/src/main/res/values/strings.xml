@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="checki_url"> http://chekicustomerapp.getsandbox.com/api/v1/brad/test</string>
+    <string name="checki_url">https://cqa-api-ke.oam.cool/api/v1/listings?per_page=30&amp;page=</string>
     <string name="action_refresh">Refresh</string>
+    <string name="title_activity_view_weightings">ViewWeightingsActivity</string>
 </resources>
