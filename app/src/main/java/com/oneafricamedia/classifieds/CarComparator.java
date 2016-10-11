@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class CarComparator implements Comparator<Car> {
     @Override
     public int compare(Car car, Car t1) {
-        if (car.getWeight() > t1.getWeight()) {
+        if (car.getWeight() < t1.getWeight()) {
             return 1;
         }else if(car.getWeight() == t1.getWeight()){
             return 0;

@@ -46,31 +46,31 @@ public class ViewWeightingsActivity extends AppCompatActivity {
         arrayList.add("Title");
         for (HashMap.Entry<String, Integer> entry : titleMap.entrySet()) {
             String key = entry.getKey();
-            arrayList.add(key + " : " + titleMap.get(key)*-1);
+            arrayList.add(key + " : " + titleMap.get(key));
         }
 
         arrayList.add("Model");
         for (HashMap.Entry<String, Integer> entry : modelMap.entrySet()) {
             String key = entry.getKey();
-            arrayList.add(key + " : " + modelMap.get(key)*-1);
+            arrayList.add(key + " : " + modelMap.get(key));
         }
 
         arrayList.add("Price");
         for (HashMap.Entry<String, Integer> entry : priceMap.entrySet()) {
             String key = entry.getKey();
-            arrayList.add(key + " : " + priceMap.get(key)*-1);
+            arrayList.add(key + " : " + priceMap.get(key));
         }
 
         arrayList.add("Negiotable");
         for (HashMap.Entry<String, Integer> entry : negotiableMap.entrySet()) {
             String key = entry.getKey();
-            arrayList.add(key + " : " + negotiableMap.get(key)*-1);
+            arrayList.add(key + " : " + negotiableMap.get(key));
         }
 
         arrayList.add("Year");
         for (HashMap.Entry<String, Integer> entry : yearMap.entrySet()) {
             String key = entry.getKey();
-            arrayList.add(key + " : " + yearMap.get(key)*-1);
+            arrayList.add(key + " : " + yearMap.get(key));
         }
 
         return arrayList;
