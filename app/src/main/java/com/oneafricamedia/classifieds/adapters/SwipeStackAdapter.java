@@ -46,6 +46,8 @@ public class SwipeStackAdapter extends BaseAdapter {
         return i;
     }
 
+
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = activity.getLayoutInflater().inflate(R.layout.card, viewGroup, false);
@@ -73,4 +75,5 @@ public class SwipeStackAdapter extends BaseAdapter {
         }
         return view;
     }
+
 }

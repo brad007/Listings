@@ -13,8 +13,8 @@ import android.widget.FrameLayout;
 
 import com.oneafricamedia.classifieds.CarComparator;
 import com.oneafricamedia.classifieds.R;
-import com.oneafricamedia.classifieds.ViewWeightingsActivity;
 import com.oneafricamedia.classifieds.adapters.SwipeStackAdapter;
+import com.oneafricamedia.classifieds.database.DatabaseHelper;
 import com.oneafricamedia.classifieds.models.Car;
 import com.oneafricamedia.classifieds.widget.swipestack.SwipeStack;
 
@@ -38,23 +38,11 @@ public class MainActivity extends AppCompatActivity implements
         SwipeStack.SwipeStackListener,
         SwipeStack.SwipeProgressListener {
 
+    //Database Helper
+    DatabaseHelper db;
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static HashMap<String, Integer> titleMap = new HashMap<>();
-    public static HashMap<String, Integer> makeMap = new HashMap<>();
-    public static HashMap<String, Integer> modelMap = new HashMap<>();
-    public static HashMap<String, Integer> conditionMap = new HashMap<>();
-    public static HashMap<String, Integer> priceMap = new HashMap<>();
-    public static HashMap<String, Integer> currencyMap = new HashMap<>();
-    public static HashMap<String, Integer> negotiableMap = new HashMap<>();
-    public static HashMap<String, Integer> yearMap = new HashMap<>();
-    public static HashMap<String, Integer> locationMap = new HashMap<>();
-    public static HashMap<String, Integer> fuelTypeMap = new HashMap<>();
-    public static HashMap<String, Integer> bodyTypeMap = new HashMap<>();
-    public static HashMap<String, Integer> driverSetupMap = new HashMap<>();
-    public static HashMap<String, Integer> transmissionMap = new HashMap<>();
-    public static HashMap<String, Integer> milageMap = new HashMap<>();
-    public static HashMap<String, Integer> moneyBackMap = new HashMap<>();
 
+    //todo:place this in permanent storage
     public int PAGE_COUNTER = 1;
 
     private FrameLayout frameLayout;
@@ -62,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<Car> list;
     private SwipeStack swipeStack;
     private SwipeStackAdapter adapter;
+    private ArrayList<String> tableNames;
 
 
     @Override
@@ -69,11 +58,15 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = new DatabaseHelper(getApplicationContext());
+
+
         swipeStack = (SwipeStack) findViewById(R.id.swipeStack);
         swipeStack.setListener(this);
         swipeStack.setSwipeProgressListener(this);
-        list = new ArrayList<>();
+        list = new ArrayList<>(300);
         new FetchDataTask(PAGE_COUNTER).execute();
+
     }
 
 
@@ -81,50 +74,74 @@ public class MainActivity extends AppCompatActivity implements
     public void onViewSwipedToLeft(int position) {
         Car car = (Car) adapter.getItem(position);
         manageWeights(car, false);
-        sort(list);
-        adapter.notifyDataSetChanged();
+        // sort(list);
+        //adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onViewSwipedToRight(int position) {
         Car car = (Car) adapter.getItem(position);
         manageWeights(car, true);
-        sort(list);
-        adapter.notifyDataSetChanged();
+        // sort(list);
+        // adapter.notifyDataSetChanged();
     }
 
 
-    private void manageWeightsHelper(HashMap<String, Integer> map, String key, boolean isRightSwipe, int addedWeight) {
+    private void manageWeightsHelper(String tableName, String key, boolean isRightSwipe, int addedWeight) {
         //We need to give listings the users like a negative weighting, since sorting is done in
         //ascending order. But the weightings should be interpreted as the lowest(possibly a negative
         //value)weighting is the users estimated most liked it from the list.
 
-        if (map.containsKey(key)) {
-            if (isRightSwipe) {
-                map.put(key, map.get(key) + addedWeight);
-            } else {
-                map.put(key, map.get(key) - addedWeight);
-            }
+
+        if (!isRightSwipe) {
+            addedWeight *= -1;
+        }
+        if (db.doesRecordExist(tableName, key)) {
+            db.updateTable(tableName, key, addedWeight);
         } else {
-            if (isRightSwipe) {
-                map.put(key, addedWeight);
-            } else {
-                map.put(key, -1*addedWeight);
-            }
+            db.insertToTable(tableName, key, addedWeight);
         }
     }
 
     private void manageWeights(Car carParam, boolean isRightSwipe) {
-        manageWeightsHelper(makeMap, carParam.getMake(), isRightSwipe, 2);
-        manageWeightsHelper(modelMap, carParam.getModel(), isRightSwipe, 2);
-        manageWeightsHelper(conditionMap, carParam.getCondition(), isRightSwipe, 1);
-        manageWeightsHelper(negotiableMap, carParam.isNegotiable() + "", isRightSwipe, 1);
-        manageWeightsHelper(yearMap, carParam.getYear() + "", isRightSwipe, 1);
-        manageWeightsHelper(locationMap, carParam.getLocation() + "", isRightSwipe, 1);
-        manageWeightsHelper(bodyTypeMap, carParam.getBodyType() + "", isRightSwipe, 1);
-        manageWeightsHelper(driverSetupMap, carParam.getDriverSetup() + "", isRightSwipe, 1);
-        manageWeightsHelper(moneyBackMap, carParam.isMoneyBack() + "", isRightSwipe, 1);
+        if (tableNames == null) {
+            getList();
+        }
+        for (int i = 0; i < tableNames.size(); i++) {
+            manageWeightsHelper(tableNames.get(i), getKey(carParam, i), isRightSwipe, getWeight(i));
+        }
     }
+
+    private int getWeight(int i) {
+        if (i < 2) {
+            return 2;
+        }
+        return 1;
+    }
+
+    private String getKey(Car carParam, int i) {
+        switch (i) {
+            case 0:
+                return carParam.getMake();
+            case 1:
+                return carParam.getModel();
+            case 2:
+                return carParam.getCondition();
+            case 3:
+                return carParam.isNegotiable() + "";
+            case 4:
+                return carParam.getYear() + "";
+            case 5:
+                return carParam.getLocation();
+            case 6:
+                return carParam.getBodyType();
+            case 7:
+                return carParam.getDriverSetup();
+            default:
+                return carParam.isMoneyBack() + "";
+        }
+    }
+
 
     @Override
     public void onStackEmpty() {
@@ -133,14 +150,19 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSwipeStart(int position) {
+
+        list.get(position).setSeen(true);
+
+
         //if the position is 5 cards away from the last, load more.
         if ((position + 10) % 30 == 0) {
             Log.v(TAG, "progress");
             PAGE_COUNTER++;
             new LoadMore(PAGE_COUNTER).execute();
+            filter(list);
+            sort(list);
             adapter.notifyDataSetChanged();
         }
-        //    Log.v(TAG, position + "");
     }
 
     @Override
@@ -178,6 +200,22 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(new Intent(MainActivity.this, ViewWeightingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public ArrayList<String> getList() {
+        tableNames = new ArrayList<>();
+        tableNames.add("make");
+        tableNames.add("model");
+        tableNames.add("condition");
+        tableNames.add("price");
+        tableNames.add("currency");
+        tableNames.add("negotiable");
+        tableNames.add("year");
+        tableNames.add("location");
+        tableNames.add("body_type");
+        tableNames.add("driver_setup");
+        tableNames.add("money_back");
+        return tableNames;
     }
 
     public class FetchDataTask extends AsyncTask<Void, Void, Void> {
@@ -298,13 +336,7 @@ public class MainActivity extends AppCompatActivity implements
                 JSONObject driverSetupJson = vehicleJson.getJSONObject("drive_setup");
                 String driverSetup = driverSetupJson.getString("title");
 
-
-                //   JSONObject fuelTypeJson = vehicleJson.getJSONObject("fuel_type");
-                //    String fuelType = fuelTypeJson.getString("title");
-
                 Log.v(TAG, title);
-                //   JSONObject transmissionJson = vehicleJson.getJSONObject("transmission");
-                //   String transmission = transmissionJson.getString("title");
 
                 int milage = vehicleJson.getInt("mileage");
 
@@ -351,9 +383,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        if (titleMap != null) {
-            sort(list);
-        }
     }
 
     private void sort(ArrayList<Car> list) {
@@ -363,52 +392,23 @@ public class MainActivity extends AppCompatActivity implements
         Collections.sort(list, new CarComparator());
     }
 
+    private void filter(ArrayList<Car> list) {
+        for (Car car : list) {
+            if (car.isSeen()) {
+                list.remove(car);
+            }
+        }
+    }
+
     private int assignWeight(Car car) {
         int weight = 0;
 
+        HashMap<String, String> params = car.getParams();
 
-        if (makeMap.containsKey(car.getMake())) {
-            weight += makeMap.get(car.getMake());
+        for (String key : params.keySet()) {
+            weight += db.getWeightFromTable(key, params.get(key));
         }
 
-        if (conditionMap.containsKey(car.getCondition())) {
-            weight += conditionMap.get(car.getCondition());
-        }
-
-        if (modelMap.containsKey(car.getModel())) {
-            weight += modelMap.get(car.getModel());
-        }
-
-
-        if (negotiableMap.containsKey(car.isNegotiable() + "")) {
-            weight += negotiableMap.get(car.isNegotiable() + "");
-        }
-
-        if (yearMap.containsKey(car.getYear() + "")) {
-            weight += yearMap.get(car.getYear() + "");
-        }
-
-        if (currencyMap.containsKey(car.getCurrency())) {
-            weight += currencyMap.get(car.getCurrency());
-        }
-
-        if (locationMap.containsKey(car.getLocation())) {
-            weight += locationMap.get(car.getLocation());
-        }
-
-        if (bodyTypeMap.containsKey(car.getBodyType())) {
-            weight += bodyTypeMap.get(car.getBodyType());
-        }
-
-        if (driverSetupMap.containsKey(car.getDriverSetup())) {
-            weight += driverSetupMap.get(car.getDriverSetup());
-        }
-
-
-        if (moneyBackMap.containsKey(car.isMoneyBack() + "")) {
-            weight += moneyBackMap.get(car.isMoneyBack() + "");
-        }
-        //    Log.v(TAG, car.getTitle() + ": " + weight);
         return weight;
     }
 }

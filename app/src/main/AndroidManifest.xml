@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViewWeightingsActivity"
+            android:name=".ui.ViewWeightingsActivity"
             android:label="@string/title_activity_view_weightings"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

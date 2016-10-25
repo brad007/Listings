@@ -15,11 +15,4 @@
         <attr name="scale_factor" format="float"/>
         <attr name="disable_hw_acceleration" format="boolean"/>
     </declare-styleable>
-
-    <declare-styleable name="CardStack">
-        <attr name="backgroundColor" format="color"/>
-        <attr name="stackMargin" format="integer" />
-    </declare-styleable>
-
-
 </resources>

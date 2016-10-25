@@ -1,9 +1,13 @@
 package com.oneafricamedia.classifieds.models;
 
+import com.oneafricamedia.classifieds.weightings.WeightingModel;
+
+import java.util.HashMap;
+
 /**
  * Created by brad on 2016/09/02.
  */
-public class Car {
+public class Car implements WeightingModel {
     private String imageUrl;
     private String title;
     private String make;
@@ -15,36 +19,17 @@ public class Car {
     private int year;
     private String location;
     private String fuelType;
-    private String bodyTye;
+    private String bodyType;
     private String driverSetup;
     private String transmission;
     private int milage;
     private boolean isMoneyBack;
     private int weight;
+    private boolean seen;
+
 
     public Car() {
     }
-
-    public Car(String imageUrl, String title, String make, String model, String condition, int price, String currency, boolean negotiable, int year, String location, String fuelType, String bodyTye, String driverSetup, String transmission, int milage, boolean isMoneyBack, int weight) {
-        this.imageUrl = imageUrl;
-        this.title = title;
-        this.make = make;
-        this.model = model;
-        this.condition = condition;
-        this.price = price;
-        this.currency = currency;
-        this.negotiable = negotiable;
-        this.year = year;
-        this.location = location;
-        this.fuelType = fuelType;
-        this.bodyTye = bodyTye;
-        this.driverSetup = driverSetup;
-        this.transmission = transmission;
-        this.milage = milage;
-        this.isMoneyBack = isMoneyBack;
-        this.weight = weight;
-    }
-
 
     public String getImageUrl() {
         return imageUrl;
@@ -135,11 +120,11 @@ public class Car {
     }
 
     public String getBodyType() {
-        return bodyTye;
+        return bodyType;
     }
 
     public void setBodyType(String bodyTye) {
-        this.bodyTye = bodyTye;
+        this.bodyType = bodyTye;
     }
 
     public String getDriverSetup() {
@@ -182,6 +167,14 @@ public class Car {
         this.weight = weight;
     }
 
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -196,7 +189,7 @@ public class Car {
                 ", year=" + year +
                 ", location='" + location + '\'' +
                 ", fuelType='" + fuelType + '\'' +
-                ", bodyTye='" + bodyTye + '\'' +
+                ", bodyType='" + bodyType + '\'' +
                 ", driverSetup='" + driverSetup + '\'' +
                 ", transmission='" + transmission + '\'' +
                 ", milage=" + milage +
@@ -204,6 +197,33 @@ public class Car {
                 ", weight=" + weight +
                 '}';
     }
+
+    @Override
+    public HashMap<String, String> getParams() {
+        HashMap<String, String> params = new HashMap<>(20);
+
+        params.put("make", make);
+        params.put("model", model);
+        params.put("condition", condition);
+        params.put("price", price + "");
+        params.put("currency", currency);
+        params.put("negotiable", negotiable + "");
+        params.put("year", year + "");
+        params.put("location", location);
+        params.put("fuelType", fuelType);
+        params.put("bodyType", bodyType);
+        params.put("driverSetup", driverSetup);
+        params.put("transmission", transmission);
+        params.put("milage", milage + "");
+        params.put("isMoneyBack", isMoneyBack + "");
+        return params;
+    }
+
+    /**
+     * Returns a list of paramters that will be used in weightings
+     * @return
+     */
+
 }
 
 
